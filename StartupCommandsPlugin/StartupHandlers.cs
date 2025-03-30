@@ -106,7 +106,7 @@ namespace FfxivStartupCommands
 
         private void OnChatReady()
         {
-            Plugin.Configuration.SetCurrentCharacter(Services.ClientState.LocalPlayer.Name.ToString());
+            Plugin.Configuration.SetCurrentCharacter(Services.ClientState.LocalContentId.ToString());
             RunStartupBehaviors();
         }
     }

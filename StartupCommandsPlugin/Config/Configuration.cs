@@ -20,7 +20,7 @@
 
         public string CurrentCharacter
         {
-            get { return this.currentCharacter; }
+            get { return CharacterConfigurations[this.currentCharacter].CharacterName; }
         }
 
         /// <summary>
@@ -103,6 +103,14 @@
                 this.CharacterConfigurations.Add(this.currentCharacter, new CharacterConfiguration());
                 this.CharacterConfigurations[this.currentCharacter].CustomCommands =
                     new List<CharacterConfiguration.CustomCommand>();
+            }
+
+            if (string.IsNullOrEmpty(this.CharacterConfigurations[this.currentCharacter].CharacterName))
+            {
+                if (Services.ClientState.LocalPlayer != null)
+                {
+                    this.CharacterConfigurations[this.currentCharacter].CharacterName = Services.ClientState.LocalPlayer.Name.ToString();
+                }
             }
 
             return this.CharacterConfigurations[this.currentCharacter];
