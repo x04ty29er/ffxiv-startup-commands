@@ -6,5 +6,5 @@
   "AssemblyVersion": "1.2.1.0",
   "RepoUrl": "https://github.com/saltycog/ffxiv-startup-commands",
   "IconUrl": "https://github.com/saltycog/ffxiv-startup-commands/raw/master/icon.png",
-  "DalamudApiLevel": 11
+  "DalamudApiLevel": 12
 }

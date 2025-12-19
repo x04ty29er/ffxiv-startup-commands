@@ -90,9 +90,9 @@
             this.gameClient = new GameClient();
 
             RegisterHooks();
-            
-            if (Services.ClientState.LocalPlayer != null)
-                Configuration.SetCurrentCharacter(Services.ClientState.LocalPlayer.Name.ToString());
+
+            if (Services.ClientState.LocalContentId != null)
+                Configuration.SetCurrentCharacter(Services.ClientState.LocalContentId.ToString());
         }
 
 
@@ -173,7 +173,7 @@
 
                         if (Configuration.CurrentCharacter == null)
                         {
-                            Configuration.SetCurrentCharacter(Services.ClientState.LocalPlayer.Name.ToString());
+                            Configuration.SetCurrentCharacter(Services.ClientState.LocalContentId.ToString());
                         }
                         
                         this.ui.ConfigWindow.Show();

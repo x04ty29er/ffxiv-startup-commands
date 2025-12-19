@@ -1,7 +1,7 @@
 namespace FfxivStartupCommands
 {
     using System;
-    using System.Runtime.InteropServices;
+    using FFXIVClientStructs.FFXIV.Client.System.String;
     using FFXIVClientStructs.FFXIV.Client.UI;
     using FFXIVClientStructs.FFXIV.Component.GUI;
 
@@ -9,7 +9,6 @@ namespace FfxivStartupCommands
     public class GameClient
     {
         private readonly GetUiModuleDelegate getUI;
-        private readonly GetChatBoxModuleDelegate getChatBox;
         private readonly IntPtr uiModulePointer;
 
         private delegate void GetChatBoxModuleDelegate(IntPtr uiModule, IntPtr message, IntPtr unused, byte a4);
@@ -20,10 +19,6 @@ namespace FfxivStartupCommands
         {
             if (Services.PluginInterface == null)
                 return;
-            
-            // Get chat box module.
-            IntPtr chatBoxModulePointer = Services.TargetModuleScanner.ScanText("48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 48 8B F2 48 8B F9 45 84 C9");
-            this.getChatBox = Marshal.GetDelegateForFunctionPointer<GetChatBoxModuleDelegate>(chatBoxModulePointer);
         }
 
 
@@ -32,12 +27,16 @@ namespace FfxivStartupCommands
         /// </summary>
         public unsafe bool GetChatVisible()
         {
-            if (Services.ClientState.LocalPlayer != null)
+            try
             {
                 AtkUnitBase* chatLog = (AtkUnitBase*)Services.GameGui.GetAddonByName("ChatLog", 1);
-                
+
                 if (chatLog != null)
                     return chatLog->IsVisible;
+            }
+            catch (Exception)
+            {
+                // Something went wrong getting the chat log information
             }
 
             return false;
@@ -63,13 +62,11 @@ namespace FfxivStartupCommands
         /// <param name="text">Text to submit.</param>
         public unsafe void SubmitToChat(string text)
         {
-            nint uiModule = (nint)UIModule.Instance();
-            using (ChatPayload payload = new ChatPayload(text))
+            var uiModule = UIModule.Instance();
+            using (Utf8String convertedCommand = new(text))
             {
-                IntPtr mem1 = Marshal.AllocHGlobal(400);
-                Marshal.StructureToPtr(payload, mem1, false);
-                this.getChatBox(uiModule, mem1, IntPtr.Zero, 0);
-                Marshal.FreeHGlobal(mem1);    
+                Utf8String* textPointer = &convertedCommand;
+                uiModule->ProcessChatBoxEntry(textPointer, IntPtr.Zero, false);
             }
         }
     }
