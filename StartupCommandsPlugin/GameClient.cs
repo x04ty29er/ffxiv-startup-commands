@@ -29,10 +29,10 @@ namespace FfxivStartupCommands
         {
             try
             {
-                AtkUnitBase* chatLog = (AtkUnitBase*)Services.GameGui.GetAddonByName("ChatLog", 1);
+                Dalamud.Game.NativeWrapper.AtkUnitBasePtr chatLog = Services.GameGui.GetAddonByName("ChatLog", 1);
 
                 if (chatLog != null)
-                    return chatLog->IsVisible;
+                    return chatLog.IsVisible;
             }
             catch (Exception)
             {

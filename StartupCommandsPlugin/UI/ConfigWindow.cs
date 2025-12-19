@@ -1,8 +1,8 @@
 namespace FfxivStartupCommands
 {
+    using Dalamud.Bindings.ImGui;
     using System;
     using System.Numerics;
-    using ImGuiNET;
 
 
     public class ConfigWindow : UIWindow
